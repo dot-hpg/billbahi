@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en-IN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GST Invoice Format: Mandatory Fields Checklist</title>
+<meta name="description" content="Every field a GST tax invoice must show under Rule 46 of the CGST Rules, with an example and a free invoice generator.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Instrument+Sans:wght@400;600&display=swap">
+<style>
+:root{--bg:#eef1f4;--panel:#fff;--ink:#18212b;--muted:#5b6876;--line:#d5dbe2;--accent:#0f5c4d;--accent-ink:#fff}
+@media (prefers-color-scheme:dark){:root{--bg:#11161b;--panel:#1a2128;--ink:#e4e9ee;--muted:#9aa7b4;--line:#2e3842;--accent:#4fbf9f;--accent-ink:#0b1714;color-scheme:dark}}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 "Instrument Sans",system-ui,sans-serif}
+main{max-width:720px;margin:0 auto;padding:32px 16px 64px}
+nav a{color:var(--accent);font-weight:600;text-decoration:none}
+h1{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:clamp(1.8rem,4vw,2.4rem);line-height:1.15;letter-spacing:-.02em;text-wrap:balance}
+h2{font-size:1.2rem;margin-top:2em}
+table{border-collapse:collapse;width:100%;font-size:15px} td,th{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top} th{background:var(--panel)}
+.wide{overflow-x:auto}
+.cta{display:block;margin:28px 0;padding:18px;border-radius:10px;background:var(--accent);color:var(--accent-ink);text-decoration:none;font-weight:600}
+.note{color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding-top:12px;margin-top:40px}
+a{color:var(--accent)}
+</style></head><body><main>
+<nav><a href="../">← BillBahi GST invoice generator</a></nav>
+<h1>GST invoice format: the fields every tax invoice must have</h1>
+<p>If you are registered under GST, each tax invoice you issue has to carry a set of details listed in Rule 46 of the CGST Rules. Missing one can cost your customer their input tax credit, so it is worth getting right.</p>
+<h2>Mandatory fields</h2>
+<div class="wide"><table><tr><th>Field</th><th>What to write</th></tr>
+<tr><td>Supplier details</td><td>Your name, address and GSTIN</td></tr>
+<tr><td>Invoice number</td><td>A consecutive serial number, up to 16 characters, unique for the financial year. Letters, numbers, hyphen and slash are allowed.</td></tr>
+<tr><td>Invoice date</td><td>Date of issue</td></tr>
+<tr><td>Recipient details</td><td>Name, address and GSTIN if the buyer is registered</td></tr>
+<tr><td>Unregistered buyer</td><td>For invoices of ₹50,000 or more, the buyer's name and address and the delivery address with state name and code</td></tr>
+<tr><td>HSN or SAC code</td><td>4 digits if your turnover was up to ₹5 crore, 6 digits above that</td></tr>
+<tr><td>Description, quantity and unit</td><td>What you supplied</td></tr>
+<tr><td>Total and taxable value</td><td>Value of supply and the taxable value after any discount</td></tr>
+<tr><td>Tax rate and amount</td><td>CGST and SGST/UTGST for supplies within a state, IGST for supplies between states</td></tr>
+<tr><td>Place of supply</td><td>State name and code, required for inter-state supplies</td></tr>
+<tr><td>Reverse charge</td><td>Whether tax is payable on reverse charge</td></tr>
+<tr><td>Signature</td><td>Signature or digital signature of the supplier or authorised person</td></tr>
+</table></div>
+<h2>Common mistakes</h2>
+<ul><li>Restarting invoice numbers in the middle of a financial year, or reusing a number.</li>
+<li>Charging CGST + SGST on a sale to another state. That should be IGST.</li>
+<li>Leaving out the place of supply on inter-state invoices.</li>
+<li>Wrong HSN/SAC digits for your turnover.</li></ul>
+<a class="cta" href="../">Make a GST invoice now: free, no signup, CGST/SGST/IGST calculated for you →</a><p class="note">This guide is general information, not tax advice. GST rules change; check the latest notifications on the GST portal or ask your CA for your specific case.</p>
+</main></body></html>

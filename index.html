@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bill Bahi GST Invoice</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Free GST invoice generator for Indian freelancers and small businesses. CGST, SGST and IGST worked out automatically, GSTIN check, amount in words, PDF download. No signup, data stays in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: editor ledger on the left, live A4 tax invoice on the right; stacks on phones. */
+:root{
+  --bg:#eef1f4; --panel:#ffffff; --ink:#18212b; --muted:#5b6876; --line:#d5dbe2;
+  --accent:#0f5c4d; --accent-ink:#ffffff; --stamp:#b4381f; --soft:#e2ece9;
+  --paper:#ffffff; --paper-ink:#141a20; --paper-line:#cfd6dd; --paper-head:#f1f5f4;
+  --display:"Bricolage Grotesque",ui-sans-serif,system-ui,sans-serif;
+  --body:"Instrument Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#11161b; --panel:#1a2128; --ink:#e4e9ee; --muted:#9aa7b4; --line:#2e3842;
+  --accent:#4fbf9f; --accent-ink:#0b1714; --stamp:#f08a6c; --soft:#1f2e2a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#11161b; --panel:#1a2128; --ink:#e4e9ee; --muted:#9aa7b4; --line:#2e3842;
+  --accent:#4fbf9f; --accent-ink:#0b1714; --stamp:#f08a6c; --soft:#1f2e2a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:14px;line-height:1.45;margin:0}
+.wrap{max-width:1360px;margin:0 auto;padding-block:20px 48px;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+header.top{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 24px;margin-bottom:18px}
+.brand h1{font-family:var(--display);font-weight:800;font-size:clamp(1.6rem,3vw,2.2rem);margin:0;letter-spacing:-.02em;text-wrap:balance}
+.brand h1 span{color:var(--accent)}
+.brand p{margin:4px 0 0;color:var(--muted);max-width:60ch}
+.actions{display:flex;flex-wrap:wrap;gap:8px}
+button,.btn{font:inherit;font-weight:600;border-radius:8px;border:1px solid var(--line);background:var(--panel);color:var(--ink);padding:9px 14px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+button.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:20px;align-items:start}
+@media (max-width:980px){.grid{grid-template-columns:minmax(0,1fr)}}
+.editor{display:flex;flex-direction:column;gap:14px;min-width:0}
+fieldset{border:1px solid var(--line);background:var(--panel);border-radius:10px;padding:14px;margin:0;min-width:0}
+legend{font-family:var(--display);font-weight:600;font-size:1rem;padding:0 6px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+label{display:flex;flex-direction:column;gap:4px;font-size:12px;color:var(--muted);font-weight:500;min-width:0}
+input,select,textarea{font:inherit;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:7px 9px;width:100%;min-width:0}
+textarea{resize:vertical;min-height:58px}
+.hint{font-size:11.5px;min-height:1em}
+.ok{color:var(--accent)} .bad{color:var(--stamp)}
+.items{display:flex;flex-direction:column;gap:10px}
+.item{display:grid;grid-template-columns:minmax(0,2.4fr) minmax(0,1fr) minmax(0,.7fr) minmax(0,1fr) minmax(0,.8fr) auto;gap:8px;align-items:end;padding-bottom:10px;border-bottom:1px dashed var(--line)}
+@media (max-width:560px){.item{grid-template-columns:1fr 1fr}.item .desc{grid-column:1/-1}}
+.item button{padding:7px 10px}
+.supply{display:inline-block;align-self:flex-start;margin-top:8px;font-size:12px;padding:3px 8px;border-radius:99px;background:var(--soft);color:var(--accent);font-weight:600}
+.promo{border:1px dashed var(--line);border-radius:10px;padding:12px 14px;color:var(--muted);font-size:13px;background:var(--panel)}
+.promo strong{color:var(--ink)}
+.adslot{min-height:90px;display:flex;align-items:center;justify-content:center;border:1px dashed var(--line);border-radius:10px;color:var(--muted);font-size:12px}
+.sample{font-size:12px;color:var(--stamp);font-weight:600}
+
+/* The paper */
+.paperwrap{position:sticky;top:12px;min-width:0;overflow-x:auto}
+.paper{background:var(--paper);color:var(--paper-ink);width:100%;min-width:560px;max-width:820px;margin:0 auto;padding:34px 36px;border-radius:4px;box-shadow:0 1px 2px rgba(0,0,0,.08),0 10px 30px rgba(15,40,50,.12);font-size:12.5px}
+.paper .mono,.paper td.num,.paper th.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.p-head{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;border-bottom:2px solid var(--paper-ink);padding-bottom:14px}
+.p-head img{max-height:56px;max-width:160px;display:block;margin-bottom:6px}
+.p-seller b{font-size:15px;display:block}
+.p-title{text-align:right}
+.p-title h2{font-family:var(--display);font-weight:800;letter-spacing:.06em;font-size:20px;margin:0 0 6px;text-transform:uppercase}
+.p-title div{font-size:12px}
+.p-parties{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:14px 0;border-bottom:1px solid var(--paper-line)}
+.p-label{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:#5d6873;font-weight:600;margin-bottom:4px}
+.paper table{width:100%;border-collapse:collapse;margin-top:14px}
+.paper th{background:var(--paper-head);font-size:10.5px;text-transform:uppercase;letter-spacing:.06em;text-align:left;padding:7px 6px;border-bottom:1px solid var(--paper-line)}
+.paper td{padding:7px 6px;border-bottom:1px solid var(--paper-line);vertical-align:top}
+.paper .num{text-align:right;white-space:nowrap}
+.p-bottom{display:grid;grid-template-columns:1.2fr 1fr;gap:24px;margin-top:14px}
+.p-totals td{border:none;padding:3px 6px}
+.p-totals tr.grand td{border-top:2px solid var(--paper-ink);font-weight:700;font-size:14px;padding-top:7px}
+.p-words{margin-top:10px;font-weight:600}
+.p-foot{display:flex;justify-content:space-between;gap:20px;margin-top:26px;align-items:flex-end}
+.p-sign{text-align:right;min-width:180px}
+.p-sign .line{border-top:1px solid var(--paper-ink);margin-top:44px;padding-top:4px}
+.p-credit{margin-top:22px;font-size:9.5px;color:#7a858f;text-align:center}
+.pre{white-space:pre-line}
+
+@media print{
+  @page{size:A4;margin:10mm}
+  body{background:#fff}
+  .editor,header.top,.adslot,.promo,.no-print{display:none!important}
+  .wrap{padding:0;max-width:none}
+  .grid{display:block}
+  .paperwrap{position:static;overflow:visible}
+  .paper{box-shadow:none;min-width:0;max-width:none;padding:0;border-radius:0}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>Bill<span>Bahi</span> GST Invoice</h1>
+      <p>Make a GST-compliant tax invoice in a minute. CGST, SGST or IGST is picked from the place of supply. Nothing leaves your browser.</p>
+    </div>
+    <div class="actions">
+      <button id="btnNew" type="button">New invoice</button>
+      <button id="btnSave" type="button">Save my business details</button>
+      <button id="btnPrint" class="primary" type="button">Download PDF</button>
+    </div>
+  </header>
+
+  <div class="grid">
+    <form class="editor" id="form" autocomplete="on">
+      <p class="sample" id="sampleNote">The form below is filled with example data. Replace it with yours.</p>
+      <fieldset>
+        <legend>Your business</legend>
+        <div class="row">
+          <label>Business name<input id="sName"></label>
+          <label>GSTIN<input id="sGstin" maxlength="15" style="text-transform:uppercase"><span class="hint" id="sGstinHint"></span></label>
+        </div>
+        <div class="row">
+          <label>Address<textarea id="sAddr"></textarea></label>
+          <label>State<select id="sState"></select></label>
+        </div>
+        <div class="row">
+          <label>Phone / email<input id="sContact"></label>
+          <label>Logo (optional)<input id="sLogo" type="file" accept="image/*"></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Bill to</legend>
+        <div class="row">
+          <label>Customer name<input id="bName"></label>
+          <label>Customer GSTIN (leave blank if unregistered)<input id="bGstin" maxlength="15" style="text-transform:uppercase"><span class="hint" id="bGstinHint"></span></label>
+        </div>
+        <div class="row">
+          <label>Address<textarea id="bAddr"></textarea></label>
+          <label>Place of supply<select id="bState"></select><span class="supply" id="supplyType"></span></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Invoice</legend>
+        <div class="row">
+          <label>Invoice number<input id="iNo"></label>
+          <label>Invoice date<input id="iDate" type="date"></label>
+          <label>Due date<input id="iDue" type="date"></label>
+        </div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Items</legend>
+        <div class="items" id="items"></div>
+        <div style="margin-top:10px"><button type="button" id="btnAdd">+ Add item</button></div>
+      </fieldset>
+
+      <fieldset>
+        <legend>Payment and notes</legend>
+        <div class="row">
+          <label>Bank details<textarea id="bank"></textarea></label>
+          <label>UPI ID<input id="upi"></label>
+        </div>
+        <label style="margin-top:10px">Terms / notes<textarea id="notes"></textarea></label>
+      </fieldset>
+
+      <div class="adslot" id="adslot" aria-label="Advertisement">Ad space</div>
+      <div class="promo" id="promo"></div>
+      <p class="promo no-print">GST guides: <a href="guides/gst-invoice-format.html">invoice format checklist</a> · <a href="guides/cgst-sgst-igst.html">CGST/SGST vs IGST</a> · <a href="guides/gst-invoice-number-rules.html">invoice number rules</a></p>
+    </form>
+
+    <div class="paperwrap">
+      <article class="paper" id="paper"></article>
+    </div>
+  </div>
+</div>
+
+<script>
+// ---- Money settings: fill these in to start earning ----
+var CONFIG = {
+  siteName: "BillBahi",
+  siteUrl: "",              // e.g. "https://billbahi.in" -- shown in the small credit line on every invoice
+  premiumUrl: "",           // e.g. your Gumroad / Razorpay page for premium templates
+  supportUpi: ""            // optional UPI ID for "support this tool"
+};
+
+var STATES = [["01","Jammu & Kashmir"],["02","Himachal Pradesh"],["03","Punjab"],["04","Chandigarh"],["05","Uttarakhand"],["06","Haryana"],["07","Delhi"],["08","Rajasthan"],["09","Uttar Pradesh"],["10","Bihar"],["11","Sikkim"],["12","Arunachal Pradesh"],["13","Nagaland"],["14","Manipur"],["15","Mizoram"],["16","Tripura"],["17","Meghalaya"],["18","Assam"],["19","West Bengal"],["20","Jharkhand"],["21","Odisha"],["22","Chhattisgarh"],["23","Madhya Pradesh"],["24","Gujarat"],["26","Dadra & Nagar Haveli and Daman & Diu"],["27","Maharashtra"],["29","Karnataka"],["30","Goa"],["31","Lakshadweep"],["32","Kerala"],["33","Tamil Nadu"],["34","Puducherry"],["35","Andaman & Nicobar Islands"],["36","Telangana"],["37","Andhra Pradesh"],["38","Ladakh"],["97","Other Territory"]];
+var RATES = [0, 0.25, 3, 5, 12, 18, 28, 40];
+var UTS = {"04":1,"26":1,"31":1,"35":1,"38":1,"97":1}; // UTs without a legislature charge UTGST instead of SGST
+var STORE_KEY = "billbahi.v1";
+
+var $ = function(id){ return document.getElementById(id); };
+function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]; }); }
+function stateName(code){ for (var i=0;i<STATES.length;i++) if (STATES[i][0]===code) return STATES[i][1]; return ""; }
+function inr(n){ return (Math.round(n*100)/100).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function load(){ try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch(e){ return {}; } }
+function save(obj){ try { localStorage.setItem(STORE_KEY, JSON.stringify(obj)); return true; } catch(e){ return false; } }
+
+// GSTIN: format + mod-36 check digit
+function gstinValid(g){
+  g = (g||"").toUpperCase();
+  if (!/^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/.test(g)) return false;
+  var cs = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ", sum = 0;
+  for (var i=0;i<14;i++){ var p = cs.indexOf(g[i]) * (i%2 ? 2 : 1); sum += Math.floor(p/36) + p%36; }
+  return cs[(36 - sum%36) % 36] === g[14];
+}
+
+// Indian-system amount in words
+var ONES = ["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"];
+var TENS = ["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
+function two(n){ return n<20 ? ONES[n] : TENS[Math.floor(n/10)] + (n%10 ? " " + ONES[n%10] : ""); }
+function three(n){ var h=Math.floor(n/100), r=n%100; return (h ? ONES[h]+" Hundred"+(r?" ":"") : "") + (r ? two(r) : ""); }
+function words(n){
+  if (n === 0) return "Zero";
+  var out = [], crore = Math.floor(n/1e7); n %= 1e7;
+  if (crore) out.push(words(crore) + " Crore");
+  var lakh = Math.floor(n/1e5); n %= 1e5; if (lakh) out.push(two(lakh) + " Lakh");
+  var th = Math.floor(n/1e3); n %= 1e3; if (th) out.push(two(th) + " Thousand");
+  if (n) out.push(three(n));
+  return out.join(" ");
+}
+function amountWords(amt){
+  var r = Math.floor(amt), p = Math.round((amt - r)*100);
+  if (p === 100){ r += 1; p = 0; }
+  return "Rupees " + words(r) + (p ? " and " + two(p) + " Paise" : "") + " Only";
+}
+
+var SAMPLE = {
+  sName:"Kaveri Design Studio", sGstin:"36AABCK1234M1ZL", sAddr:"Plot 14, Road No. 2\nBanjara Hills, Hyderabad 500034", sState:"36", sContact:"+91 98480 00000 · hello@kaveri.studio",
+  bName:"Lotus Organics Pvt Ltd", bGstin:"29AACCL5678N1ZO", bAddr:"22, 4th Cross, Indiranagar\nBengaluru 560038", bState:"29",
+  bank:"HDFC Bank · A/c 50200012345678\nIFSC HDFC0001234", upi:"kaveri@okhdfcbank", notes:"Payment due within 15 days. Thank you for your business.",
+  items:[{d:"Brand identity design (logo + guidelines)",h:"998391",q:1,r:45000,g:18},{d:"Product label design",h:"998391",q:6,r:3500,g:18},{d:"Printed sample labels",h:"4821",q:200,r:4.5,g:12}]
+};
+
+var logoData = "";
+var FIELDS = ["sName","sGstin","sAddr","sState","sContact","bName","bGstin","bAddr","bState","iNo","iDate","iDue","bank","upi","notes"];
+var SELLER = ["sName","sGstin","sAddr","sState","sContact","bank","upi","notes"];
+
+function fillStates(sel){ sel.innerHTML = '<option value="">Select state</option>' + STATES.map(function(s){ return '<option value="'+s[0]+'">'+s[0]+' · '+esc(s[1])+'</option>'; }).join(""); }
+
+function itemRow(it){
+  var el = document.createElement("div"); el.className = "item";
+  el.innerHTML =
+    '<label class="desc">Description<input data-k="d"></label>'+
+    '<label>HSN/SAC<input data-k="h" inputmode="numeric"></label>'+
+    '<label>Qty<input data-k="q" type="number" min="0" step="any"></label>'+
+    '<label>Rate (₹)<input data-k="r" type="number" min="0" step="any"></label>'+
+    '<label>GST %<select data-k="g">'+RATES.map(function(r){ return '<option value="'+r+'">'+r+'%</option>'; }).join("")+'</select></label>'+
+    '<button type="button" aria-label="Remove item" title="Remove item">✕</button>';
+  el.querySelector('[data-k="d"]').value = it.d || "";
+  el.querySelector('[data-k="h"]').value = it.h || "";
+  el.querySelector('[data-k="q"]').value = it.q == null ? 1 : it.q;
+  el.querySelector('[data-k="r"]').value = it.r == null ? "" : it.r;
+  el.querySelector('[data-k="g"]').value = String(it.g == null ? 18 : it.g);
+  el.querySelector("button").addEventListener("click", function(){ el.remove(); render(); });
+  $("items").appendChild(el);
+}
+function readItems(){
+  return Array.prototype.map.call(document.querySelectorAll("#items .item"), function(el){
+    var g = function(k){ return el.querySelector('[data-k="'+k+'"]').value; };
+    return { d:g("d"), h:g("h"), q:parseFloat(g("q"))||0, r:parseFloat(g("r"))||0, g:parseFloat(g("g"))||0 };
+  });
+}
+
+function setForm(data){
+  FIELDS.forEach(function(f){ if (data[f] != null) $(f).value = data[f]; });
+  $("items").innerHTML = "";
+  (data.items && data.items.length ? data.items : [{}]).forEach(itemRow);
+}
+function today(off){ var d = new Date(); d.setDate(d.getDate() + (off||0)); return d.toISOString().slice(0,10); }
+function fmtDate(s){ if (!s) return ""; var p = s.split("-"); return p[2]+"/"+p[1]+"/"+p[0]; }
+
+function gstHint(inputId, hintId, stateSel){
+  var v = $(inputId).value.trim().toUpperCase(), h = $(hintId);
+  if (!v){ h.textContent = ""; return; }
+  if (gstinValid(v)){
+    h.textContent = "Valid GSTIN · " + stateName(v.slice(0,2)); h.className = "hint ok";
+    if (stateSel && !$(stateSel).dataset.touched) $(stateSel).value = v.slice(0,2);
+  } else { h.textContent = v.length < 15 ? "GSTIN has 15 characters" : "This GSTIN doesn't pass the check digit. Check for a typo."; h.className = "hint bad"; }
+}
+
+function render(){
+  var v = {}; FIELDS.forEach(function(f){ v[f] = $(f).value; });
+  var items = readItems();
+  var inter = v.sState && v.bState && v.sState !== v.bState;
+  $("supplyType").textContent = !v.sState || !v.bState ? "Pick both states" : inter ? "Inter-state · IGST" : "Intra-state · CGST + " + (UTS[v.bState] ? "UTGST" : "SGST");
+  gstHint("sGstin","sGstinHint","sState"); gstHint("bGstin","bGstinHint","bState");
+
+  var taxable = 0, slabs = {}, rows = "";
+  items.forEach(function(it, i){
+    var amt = it.q * it.r, tax = amt * it.g / 100; taxable += amt;
+    slabs[it.g] = slabs[it.g] || {base:0,tax:0}; slabs[it.g].base += amt; slabs[it.g].tax += tax;
+    rows += '<tr><td class="num">'+(i+1)+'</td><td>'+esc(it.d)+'</td><td class="mono">'+esc(it.h)+'</td><td class="num">'+it.q+'</td><td class="num">'+inr(it.r)+'</td><td class="num">'+it.g+'%</td><td class="num">'+inr(amt)+'</td></tr>';
+  });
+  var taxTotal = 0, taxRows = "";
+  Object.keys(slabs).map(Number).sort(function(a,b){return a-b;}).forEach(function(r){
+    var t = slabs[r].tax; taxTotal += t; if (!r) return;
+    if (inter) taxRows += '<tr><td>IGST @ '+r+'%</td><td class="num">'+inr(t)+'</td></tr>';
+    else taxRows += '<tr><td>CGST @ '+(r/2)+'%</td><td class="num">'+inr(t/2)+'</td></tr><tr><td>'+(UTS[v.bState] ? 'UTGST' : 'SGST')+' @ '+(r/2)+'%</td><td class="num">'+inr(t/2)+'</td></tr>';
+  });
+  var gross = taxable + taxTotal, total = Math.round(gross), roundOff = total - gross;
+  var credit = CONFIG.siteUrl ? 'Made free with ' + esc(CONFIG.siteName) + ' · ' + esc(CONFIG.siteUrl.replace(/^https?:\/\//,"")) : 'Made free with ' + esc(CONFIG.siteName);
+
+  $("paper").innerHTML =
+    '<div class="p-head"><div class="p-seller">'+(logoData ? '<img src="'+logoData+'" alt="">' : '')+
+      '<b>'+esc(v.sName)+'</b><div class="pre">'+esc(v.sAddr)+'</div>'+(v.sState ? '<div>State: '+esc(stateName(v.sState))+' ('+v.sState+')</div>' : '')+
+      (v.sGstin ? '<div>GSTIN: <span class="mono">'+esc(v.sGstin.toUpperCase())+'</span></div>' : '')+(v.sContact ? '<div>'+esc(v.sContact)+'</div>' : '')+'</div>'+
+    '<div class="p-title"><h2>Tax Invoice</h2><div>Invoice no. <b class="mono">'+esc(v.iNo)+'</b></div><div>Date: '+fmtDate(v.iDate)+'</div>'+(v.iDue ? '<div>Due: '+fmtDate(v.iDue)+'</div>' : '')+'</div></div>'+
+    '<div class="p-parties"><div><div class="p-label">Bill to</div><b>'+esc(v.bName)+'</b><div class="pre">'+esc(v.bAddr)+'</div>'+
+      (v.bGstin ? '<div>GSTIN: <span class="mono">'+esc(v.bGstin.toUpperCase())+'</span></div>' : '<div>Unregistered buyer</div>')+'</div>'+
+    '<div><div class="p-label">Place of supply</div>'+(v.bState ? esc(stateName(v.bState))+' ('+v.bState+')' : '—')+
+      '<div style="margin-top:8px" class="p-label">Reverse charge</div>No</div></div>'+
+    '<table><thead><tr><th class="num">#</th><th>Description</th><th>HSN/SAC</th><th class="num">Qty</th><th class="num">Rate</th><th class="num">GST</th><th class="num">Taxable value</th></tr></thead><tbody>'+rows+'</tbody></table>'+
+    '<div class="p-bottom"><div>'+
+      (v.bank || v.upi ? '<div class="p-label">Pay to</div><div class="pre">'+esc(v.bank)+'</div>'+(v.upi ? '<div>UPI: <span class="mono">'+esc(v.upi)+'</span></div>' : '') : '')+
+      (v.notes ? '<div class="p-label" style="margin-top:10px">Notes</div><div class="pre">'+esc(v.notes)+'</div>' : '')+'</div>'+
+    '<div><table class="p-totals"><tr><td>Taxable value</td><td class="num">'+inr(taxable)+'</td></tr>'+taxRows+
+      (Math.abs(roundOff) >= 0.005 ? '<tr><td>Round off</td><td class="num">'+(roundOff>0?'+':'')+inr(roundOff)+'</td></tr>' : '')+
+      '<tr class="grand"><td>Total</td><td class="num">₹ '+inr(total)+'</td></tr></table>'+
+      '<div class="p-words">'+amountWords(total)+'</div></div></div>'+
+    '<div class="p-foot"><div style="font-size:10.5px;color:#5d6873">This is a computer-generated invoice.</div><div class="p-sign">For <b>'+esc(v.sName)+'</b><div class="line">Authorised signatory</div></div></div>'+
+    '<div class="p-credit">'+credit+'</div>';
+
+  var st = load(); st.draft = Object.assign({}, v, {items:items}); save(st);
+}
+
+function nextNo(no){ var m = /(\d+)(?!.*\d)/.exec(no||""); if (!m) return (no||"INV-") + "1"; var n = String(parseInt(m[1],10)+1); while (n.length < m[1].length) n = "0"+n; return no.slice(0,m.index) + n + no.slice(m.index+m[1].length); }
+
+function init(){
+  fillStates($("sState")); fillStates($("bState"));
+  var st = load();
+  if (st.logo) logoData = st.logo;
+  if (st.draft){ setForm(st.draft); $("sampleNote").hidden = true; }
+  else if (st.seller){ setForm(Object.assign({}, st.seller, {iNo:"INV-0001", iDate:today(), iDue:today(15), items:[{}]})); $("sampleNote").hidden = true; }
+  else setForm(Object.assign({}, SAMPLE, {iNo:"KDS/2026-27/014", iDate:today(), iDue:today(15)}));
+
+  $("form").addEventListener("input", function(e){ if (e.target.id === "sState" || e.target.id === "bState") e.target.dataset.touched = "1"; $("sampleNote").hidden = true; render(); });
+  $("form").addEventListener("submit", function(e){ e.preventDefault(); });
+  $("btnAdd").addEventListener("click", function(){ itemRow({}); render(); });
+  $("sLogo").addEventListener("change", function(){
+    var f = this.files[0]; if (!f) return; var r = new FileReader();
+    r.onload = function(){ logoData = r.result; var s = load(); s.logo = logoData; save(s); render(); }; r.readAsDataURL(f);
+  });
+  $("btnSave").addEventListener("click", function(){
+    var s = load(); s.seller = {}; SELLER.forEach(function(f){ s.seller[f] = $(f).value; });
+    $("btnSave").textContent = save(s) ? "Saved for next time" : "Couldn't save in this browser";
+    setTimeout(function(){ $("btnSave").textContent = "Save my business details"; }, 2200);
+  });
+  $("btnNew").addEventListener("click", function(){
+    var s = load(), no = nextNo($("iNo").value);
+    var base = s.seller || {}; var keep = {}; SELLER.forEach(function(f){ keep[f] = base[f] != null ? base[f] : $(f).value; });
+    setForm(Object.assign(keep, {bName:"",bGstin:"",bAddr:"",bState:"",iNo:no,iDate:today(),iDue:today(15),items:[{}]}));
+    $("bState").dataset.touched = ""; render();
+  });
+  $("btnPrint").addEventListener("click", function(){
+    var t = document.title; document.title = ($("iNo").value || "invoice").replace(/[\/\\]/g,"-");
+    window.print(); document.title = t;
+  });
+
+  var promo = "<strong>Free forever for basic invoices.</strong> ";
+  if (CONFIG.premiumUrl) promo += 'Need quotations, delivery challans or branded templates? <a href="'+esc(CONFIG.premiumUrl)+'" target="_blank" rel="noopener">Get the premium pack</a>.';
+  else promo += "Your details are stored only in this browser. Use “Save my business details” so the next invoice is half-filled.";
+  if (CONFIG.supportUpi) promo += ' Like it? Support via UPI: <span style="font-family:var(--mono)">'+esc(CONFIG.supportUpi)+'</span>';
+  $("promo").innerHTML = promo;
+  render();
+}
+init();
+</script>
+</body>
+</html>

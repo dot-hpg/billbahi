@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en-IN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GST Invoice Number Rules and Format Examples</title>
+<meta name="description" content="How to number GST invoices: 16 character limit, allowed characters, financial-year series and examples like INV/2026-27/001.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Instrument+Sans:wght@400;600&display=swap">
+<style>
+:root{--bg:#eef1f4;--panel:#fff;--ink:#18212b;--muted:#5b6876;--line:#d5dbe2;--accent:#0f5c4d;--accent-ink:#fff}
+@media (prefers-color-scheme:dark){:root{--bg:#11161b;--panel:#1a2128;--ink:#e4e9ee;--muted:#9aa7b4;--line:#2e3842;--accent:#4fbf9f;--accent-ink:#0b1714;color-scheme:dark}}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 "Instrument Sans",system-ui,sans-serif}
+main{max-width:720px;margin:0 auto;padding:32px 16px 64px}
+nav a{color:var(--accent);font-weight:600;text-decoration:none}
+h1{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:clamp(1.8rem,4vw,2.4rem);line-height:1.15;letter-spacing:-.02em;text-wrap:balance}
+h2{font-size:1.2rem;margin-top:2em}
+table{border-collapse:collapse;width:100%;font-size:15px} td,th{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top} th{background:var(--panel)}
+.wide{overflow-x:auto}
+.cta{display:block;margin:28px 0;padding:18px;border-radius:10px;background:var(--accent);color:var(--accent-ink);text-decoration:none;font-weight:600}
+.note{color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding-top:12px;margin-top:40px}
+a{color:var(--accent)}
+</style></head><body><main>
+<nav><a href="../">← BillBahi GST invoice generator</a></nav>
+<h1>GST invoice number rules, with examples you can copy</h1>
+<p>GST does not prescribe one numbering format, but it sets a few rules your series must follow.</p>
+<h2>The rules</h2>
+<ul><li>At most 16 characters.</li>
+<li>Only letters, numbers, hyphen (-) and slash (/).</li>
+<li>Consecutive, and unique for each financial year (April to March).</li>
+<li>You can run separate series, for example one per branch or one for exports.</li></ul>
+<h2>Formats that work</h2>
+<div class="wide"><table><tr><th>Format</th><th>Example</th><th>Length</th></tr>
+<tr><td>Prefix / year / number</td><td>INV/2026-27/001</td><td>15</td></tr>
+<tr><td>Short prefix and year</td><td>KDS/26-27/0142</td><td>14</td></tr>
+<tr><td>Branch series</td><td>HYD-2627-0031</td><td>13</td></tr>
+</table></div>
+<p>Start a fresh series on 1 April each year so numbers never repeat across financial years. BillBahi increments the last number for you when you press “New invoice”.</p>
+<a class="cta" href="../">Make a GST invoice now: free, no signup, CGST/SGST/IGST calculated for you →</a><p class="note">This guide is general information, not tax advice. GST rules change; check the latest notifications on the GST portal or ask your CA for your specific case.</p>
+</main></body></html>

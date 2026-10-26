@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en-IN"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CGST, SGST, UTGST or IGST: Which to Charge</title>
+<meta name="description" content="Simple rule for deciding between CGST + SGST and IGST on your invoice, with worked examples and a free GST invoice generator.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,800&family=Instrument+Sans:wght@400;600&display=swap">
+<style>
+:root{--bg:#eef1f4;--panel:#fff;--ink:#18212b;--muted:#5b6876;--line:#d5dbe2;--accent:#0f5c4d;--accent-ink:#fff}
+@media (prefers-color-scheme:dark){:root{--bg:#11161b;--panel:#1a2128;--ink:#e4e9ee;--muted:#9aa7b4;--line:#2e3842;--accent:#4fbf9f;--accent-ink:#0b1714;color-scheme:dark}}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 "Instrument Sans",system-ui,sans-serif}
+main{max-width:720px;margin:0 auto;padding:32px 16px 64px}
+nav a{color:var(--accent);font-weight:600;text-decoration:none}
+h1{font-family:"Bricolage Grotesque",system-ui,sans-serif;font-size:clamp(1.8rem,4vw,2.4rem);line-height:1.15;letter-spacing:-.02em;text-wrap:balance}
+h2{font-size:1.2rem;margin-top:2em}
+table{border-collapse:collapse;width:100%;font-size:15px} td,th{border:1px solid var(--line);padding:8px;text-align:left;vertical-align:top} th{background:var(--panel)}
+.wide{overflow-x:auto}
+.cta{display:block;margin:28px 0;padding:18px;border-radius:10px;background:var(--accent);color:var(--accent-ink);text-decoration:none;font-weight:600}
+.note{color:var(--muted);font-size:14px;border-top:1px solid var(--line);padding-top:12px;margin-top:40px}
+a{color:var(--accent)}
+</style></head><body><main>
+<nav><a href="../">← BillBahi GST invoice generator</a></nav>
+<h1>CGST + SGST or IGST? How to pick the right tax on your invoice</h1>
+<p>The rate stays the same. What changes is how the tax is split, and that depends on two states: where you are registered, and the place of supply.</p>
+<h2>The rule</h2>
+<ul><li><b>Same state</b> (intra-state): charge CGST and SGST, each half of the rate. 18% becomes 9% CGST + 9% SGST.</li>
+<li><b>Same Union Territory without a legislature</b> (Chandigarh, Ladakh, Lakshadweep, Andaman &amp; Nicobar, Dadra &amp; Nagar Haveli and Daman &amp; Diu): CGST + UTGST instead of SGST.</li>
+<li><b>Different states</b> (inter-state): charge the full rate as IGST. 18% becomes 18% IGST.</li></ul>
+<h2>Worked examples</h2>
+<div class="wide"><table><tr><th>You are in</th><th>Place of supply</th><th>On ₹10,000 at 18%</th></tr>
+<tr><td>Telangana</td><td>Telangana</td><td>CGST ₹900 + SGST ₹900</td></tr>
+<tr><td>Telangana</td><td>Karnataka</td><td>IGST ₹1,800</td></tr>
+<tr><td>Chandigarh</td><td>Chandigarh</td><td>CGST ₹900 + UTGST ₹900</td></tr>
+</table></div>
+<h2>What is the place of supply?</h2>
+<p>For goods it is usually where the goods are delivered. For most services to a registered business it is the location of that business. The first two digits of a GSTIN are the state code, so a buyer GSTIN starting with 29 is in Karnataka. Special rules apply to some services such as events, transport and real estate.</p>
+<a class="cta" href="../">Make a GST invoice now: free, no signup, CGST/SGST/IGST calculated for you →</a><p class="note">This guide is general information, not tax advice. GST rules change; check the latest notifications on the GST portal or ask your CA for your specific case.</p>
+</main></body></html>
