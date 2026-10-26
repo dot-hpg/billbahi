@@ -1,2 +1,3 @@
 User-agent: *
 Allow: /
+Sitemap: https://dot-hpg.github.io/billbahi/sitemap.xml
